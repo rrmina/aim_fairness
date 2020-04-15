@@ -26,6 +26,9 @@ class AdultDataset(Object):
     def __init__(self, sensitive_attribute="sex"):
         super(AdultDataset, self).__init__()
 
+        # Device
+        self.device = torch.device("cuda" if torch.cuda.is_available else "cpu")
+
         # Emphasis on the sensitive attribute
         self.sensitive_attribute = sensitive_attribute
 
@@ -60,8 +63,10 @@ class AdultDataset(Object):
         train_features, train_labels = train_dataset.drop('income', axis=1), train_dataset['income']
         test_features, test_labels = test_dataset.drop('income', axis=1), test_dataset['income']
 
-        # Categorize whether a Column is a continuous variable or a categorical variable
-        continuous_vars = []
+        # Categorize whether a Column is a (1) continuous variable or a (2) categorical variable
+        # Column names are stored in their respective lists
+        continuous_vars = []                    # We'll only store the continuous column names because their index will be changed once we turn
+                                                # we turn the categorical variables into their one-hot encoding
         self.categorical_columns = []
         for col in train_features.columns:
             if (train_features[col].isnull().sum() > 0):
@@ -74,13 +79,40 @@ class AdultDataset(Object):
 
         # Preprocessing the sensitive attribute
         self.sensitive_nunique = train_features[sensitive_attribute].nunique()
-        sensitive_train = np.logical_not(pd.Categorical(train_features[self.sensitive_attribute]).codes)            # pd.Categorical.codes convers categorical strings to categorical integer values
+        sensitive_train = np.logical_not(pd.Categorical(train_features[self.sensitive_attribute]).codes)            # pd.Categorical.codes converts categorical strings to categorical integer values
         sensitive_test = np.logical_not(pd.Categorical(test_features[self.senstive_attribute]).codes)
 
         # Transform Categorical Variables into their One-hot encoding
         train_features = pd.get_dummies(train_features, columns=self.categorical_columns, prefix_sep='=')
         test_features = pd.get_dummies(test_features, columns=self.categorical_columns, prefix_sep='=')
+        self.continuous_columns = [train_features.columns.get_loc(var) for var in continuous_vars]
 
+        # Add mission columns to the test dataset
+        # After applying pd.get_dummies, train_features returned 104 columns 
+        # while test_features returned 103 columns
+        test_features.insert(
+            loc = train_features.columns.get_loc('native_country=Holand-Netherlands'),
+            column='native_country=Holand-Netherlands', value=0
+        )
+
+        # This essentially stores the column name of the categorical variables a,d the list of indexes of their one-hot representations, 
+        # e.g. "workclass" = [6,7,8,9,10,11,12] 
+        # Notice that 'sex' column, which is also our sensitive attribute, has only 2 unique values
+        self.one_hot_columns={}
+        for column_name in self.categorical_columns:
+            ids = [i for i, col in enumerate(train_features.columns) if col.startswith("{}=".format(column_name))]
+            if (len(ids) > 0):
+                assert len(ids) == ids[-1] - ids[0] + 1
+            self.one_hot_columns[column_name] = ids
+        print("categorical features: ", self.one_hot_columns.keys())
+
+        self.column_ids = {col: idx for idx, col in enumerate(train_features.columns)}
+
+        train_features = torch.tensor(train_features.values.astype(np.float32), device=self.device)
+        train_labels = torch.tensor(train_labels.values.astype(np.int64), device=self.device)
+        train_protected = torch.tensor(protected_train.as_type(np.bool), device=self.device)
+
+        
     def _check_and_download(self, filepath, url):
-        if not path.exists(filepath):
+        if not path.exists(filepath):-
             request.urlretrieve(url, filepath)
