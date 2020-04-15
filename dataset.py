@@ -38,8 +38,8 @@ class AdultDataset(Object):
         test_data_file = path.join(self.data_dir, "adult.test")
 
         # Check file it exists and Download if DNE
-        _check_and_download(train_data_file, 'https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data')
-        _check_and_download(test_data_file, 'https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.test')
+        self._check_and_download(train_data_file, 'https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data')
+        self._check_and_download(test_data_file, 'https://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.test')
 
         # Read CSV Files
         train_dataset = pd.read_csv(train_data_file, sep=',', header=None, names=self.column_names)
@@ -106,13 +106,22 @@ class AdultDataset(Object):
             self.one_hot_columns[column_name] = ids
         print("categorical features: ", self.one_hot_columns.keys())
 
+        # Save the column names and column indexes of the final dataframe
         self.column_ids = {col: idx for idx, col in enumerate(train_features.columns)}
 
+        # Convert data to torch tensor
         train_features = torch.tensor(train_features.values.astype(np.float32), device=self.device)
         train_labels = torch.tensor(train_labels.values.astype(np.int64), device=self.device)
         train_protected = torch.tensor(protected_train.as_type(np.bool), device=self.device)
 
-        
+        # Normalize the values of the continuous variables
+        # Normaluze instead of Min-Max [0,1] scaling
+        self._normalize(self.continuous_columns)
+
+
     def _check_and_download(self, filepath, url):
         if not path.exists(filepath):-
             request.urlretrieve(url, filepath)
+
+    def _normalize(self, columns):
+        columns = columns if columns in not None else np.arange(self.)
