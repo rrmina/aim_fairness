@@ -12,7 +12,9 @@ import numpy as np
 from urllib import request
 from os import path
 
-class AdultDataset(Object):
+from sklearn.model_selection import train_test_split
+
+class Adult(object):
     # Column names
     column_names = [
         'age', 'workclass', 'fnlwgt', 'education', 'education_num', 'marital_status', 'occupation', 'relationship',
@@ -23,11 +25,13 @@ class AdultDataset(Object):
     train_labels_map = {'<=50K': 0, '>50K': 1}
     test_labels_map = {'<=50K.': 0, '>50K.': 1}
 
-    def __init__(self, sensitive_attribute="sex"):
-        super(AdultDataset, self).__init__()
+    def __init__(self, sensitive_attribute="sex", device=None, normalize=True):
+        super(Adult, self).__init__()
 
         # Device
-        self.device = torch.device("cuda" if torch.cuda.is_available else "cpu")
+        self.device = device
+        if (device == None):
+            self.device = torch.device("cuda" if torch.cuda.is_available else "cpu")
 
         # Emphasis on the sensitive attribute
         self.sensitive_attribute = sensitive_attribute
@@ -79,8 +83,8 @@ class AdultDataset(Object):
 
         # Preprocessing the sensitive attribute
         self.sensitive_nunique = train_features[sensitive_attribute].nunique()
-        sensitive_train = np.logical_not(pd.Categorical(train_features[self.sensitive_attribute]).codes)            # pd.Categorical.codes converts categorical strings to categorical integer values
-        sensitive_test = np.logical_not(pd.Categorical(test_features[self.senstive_attribute]).codes)
+        a_train = np.logical_not(pd.Categorical(train_features[self.sensitive_attribute]).codes)            # pd.Categorical.codes converts categorical strings to categorical integer values
+        a_test = np.logical_not(pd.Categorical(test_features[self.sensitive_attribute]).codes)
 
         # Transform Categorical Variables into their One-hot encoding
         train_features = pd.get_dummies(train_features, columns=self.categorical_columns, prefix_sep='=')
@@ -104,24 +108,43 @@ class AdultDataset(Object):
             if (len(ids) > 0):
                 assert len(ids) == ids[-1] - ids[0] + 1
             self.one_hot_columns[column_name] = ids
-        print("categorical features: ", self.one_hot_columns.keys())
+        # print("categorical features: ", self.one_hot_columns.keys())
 
         # Save the column names and column indexes of the final dataframe
         self.column_ids = {col: idx for idx, col in enumerate(train_features.columns)}
 
-        # Convert data to torch tensor
+        # Convert train data to torch tensor
         train_features = torch.tensor(train_features.values.astype(np.float32), device=self.device)
         train_labels = torch.tensor(train_labels.values.astype(np.int64), device=self.device)
-        train_protected = torch.tensor(protected_train.as_type(np.bool), device=self.device)
+        train_a = torch.tensor(a_train.astype(np.bool), device=self.device)
+
+        # Divide train set into development/train set and validation set
+        self.x_train, self.x_val, self.y_train, self.y_val, self.a_train, self.a_val = train_test_split(
+            train_features, train_labels, train_a, test_size=0.1, random_state=0
+        )
+
+        # Convert test data to torch tensor
+        self.x_test = torch.tensor(test_features.values.astype(np.float32), device=self.device)
+        self.y_test = torch.tensor(test_labels.values.astype(np.int64), device=self.device)
+        self.a_test = torch.tensor(a_test.astype(np.bool), device=self.device)
 
         # Normalize the values of the continuous variables
         # Normaluze instead of Min-Max [0,1] scaling
-        self._normalize(self.continuous_columns)
+        if (normalize):
+            self._normalize(self.continuous_columns)
 
+    def load_dataset(self):
+        return self.x_train, self.y_train, self.a_train, self.x_val, self.y_val, self.a_val, self.x_test, self.y_test, self.a_test
 
     def _check_and_download(self, filepath, url):
-        if not path.exists(filepath):-
+        if not path.exists(filepath):
             request.urlretrieve(url, filepath)
 
     def _normalize(self, columns):
-        columns = columns if columns in not None else np.arange(self.)
+        columns = columns if columns is not None else np.arange(self.x_train.shpe[1])
+
+        self.mean, self.std = self.x_train.mean(dim=0)[columns], self.x_train.std(dim=0)[columns]
+
+        self.x_train[:, columns] = (self.x_train[:, columns] - self.mean) / self.std
+        self.x_val[:, columns] = (self.x_val[:, columns] - self.mean) / self.std
+        self.x_test[:, columns] = (self.x_test[:, columns] - self.mean) / self.std
