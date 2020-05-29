@@ -1,4 +1,34 @@
 import numpy as np
+# from tabulate import tabulate 
+
+def report_group_metrics(A, Y_hat, Y):
+    assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
+    assert Y_hat.shape == A.shape, "Y_hat and A are expected to have the same shape"
+    assert len(A.shape) == 1, "A, Y_hat, and Y are expected to be 1D vectors"
+
+    # Compute metrics
+    base_rate = Base_rate(A, Y)
+    dp_gap = DP_gap(A, Y_hat)
+    eo_gap = EO_gap(A, Y_hat, Y)
+    eopp_gap = EOpp_gap(A, Y_hat, Y)
+    acc_gap = Acc_gap(A, Y_hat, Y)
+
+    # Pretty Printing
+    headers = ["Fairness Definitions", "Gap Values"]
+    row_format = "{:>30}" * len(headers)
+    data = []
+    data.append(["Base Rate", str(base_rate)])
+    data.append(["Demographic Parity", str(dp_gap)])
+    data.append(["Equalized Odds", str(eo_gap)])
+    data.append(["Equal Opportunity Y0", str(eopp_gap[0])])
+    data.append(["Equal Opportunity Y1", str(eopp_gap[1])])
+    data.append(["Accuracy Parity", str(acc_gap)])
+
+    # Print
+    print(row_format.format(*headers))
+    print("=" * 70)
+    for row in data:
+        print(row_format.format(*row))
 
 def DP_gap(A, Y_hat, debug=False):
     assert Y_hat.shape == A.shape, "Y_hat and A are expected to have the same shape"
@@ -104,7 +134,7 @@ def Acc_gap(A, Y_hat, Y, debug=False):
     return abs(Acc0 - Acc1)
 
 # DP_gap and Base are essentially the same, except for their inputs
-def base_rate(A, Y, debug=False):
+def Base_rate(A, Y, debug=False):
     assert Y.shape == A.shape, "Y and A are expected to have the same shape"
     assert len(A.shape) == 1, "A and Y are expected to be 1D vectors"
 
