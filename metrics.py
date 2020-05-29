@@ -1,10 +1,14 @@
 import numpy as np
-# from tabulate import tabulate 
 
 def report_group_metrics(A, Y_hat, Y, debug=False):
     assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
     assert Y_hat.shape == A.shape, "Y_hat and A are expected to have the same shape"
     assert len(A.shape) == 1, "A, Y_hat, and Y are expected to be 1D vectors"
+
+    if (debug):
+        print("=" * 70)
+        print("{}{}".format(" " * 30, "Debug Logs"))
+        print("=" * 70)
 
     # Compute metrics
     base_rate = Base_rate(A, Y, debug)
@@ -14,7 +18,8 @@ def report_group_metrics(A, Y_hat, Y, debug=False):
     acc_gap = Acc_gap(A, Y_hat, Y, debug)
 
     # Pretty Printing
-    headers = ["Fairness Definitions", "Gap Values"]
+    
+    
     row_format = "{:>30}{:>30.2f}"
     data = []
     data.append(["Base Rate", base_rate])
@@ -25,6 +30,8 @@ def report_group_metrics(A, Y_hat, Y, debug=False):
     data.append(["Accuracy Parity", acc_gap])
 
     # Print
+    headers = ["Fairness Definitions", "Gap Values"]
+    print("=" * (len(headers) * 30 + 10))
     print("{:>30}{:>30}".format(*headers))
     print("=" * (len(headers) * 30 + 10))
     for row in data:
