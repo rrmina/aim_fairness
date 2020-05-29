@@ -1,32 +1,32 @@
 import numpy as np
 # from tabulate import tabulate 
 
-def report_group_metrics(A, Y_hat, Y):
+def report_group_metrics(A, Y_hat, Y, debug=False):
     assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
     assert Y_hat.shape == A.shape, "Y_hat and A are expected to have the same shape"
     assert len(A.shape) == 1, "A, Y_hat, and Y are expected to be 1D vectors"
 
     # Compute metrics
-    base_rate = Base_rate(A, Y)
-    dp_gap = DP_gap(A, Y_hat)
-    eo_gap = EO_gap(A, Y_hat, Y)
-    eopp_gap = EOpp_gap(A, Y_hat, Y)
-    acc_gap = Acc_gap(A, Y_hat, Y)
+    base_rate = Base_rate(A, Y, debug)
+    dp_gap = DP_gap(A, Y_hat, debug)
+    eo_gap = EO_gap(A, Y_hat, Y, debug)
+    eopp_gap = EOpp_gap(A, Y_hat, Y, debug)
+    acc_gap = Acc_gap(A, Y_hat, Y, debug)
 
     # Pretty Printing
     headers = ["Fairness Definitions", "Gap Values"]
-    row_format = "{:>30}" * len(headers)
+    row_format = "{:>30}{:>30.2f}"
     data = []
-    data.append(["Base Rate", str(base_rate)])
-    data.append(["Demographic Parity", str(dp_gap)])
-    data.append(["Equalized Odds", str(eo_gap)])
-    data.append(["Equal Opportunity Y0", str(eopp_gap[0])])
-    data.append(["Equal Opportunity Y1", str(eopp_gap[1])])
-    data.append(["Accuracy Parity", str(acc_gap)])
+    data.append(["Base Rate", base_rate])
+    data.append(["Demographic Parity", dp_gap])
+    data.append(["Equalized Odds", eo_gap])
+    data.append(["Equal Opportunity Y0", eopp_gap[0]])
+    data.append(["Equal Opportunity Y1", eopp_gap[1]])
+    data.append(["Accuracy Parity", acc_gap])
 
     # Print
-    print(row_format.format(*headers))
-    print("=" * 70)
+    print("{:>30}{:>30}".format(*headers))
+    print("=" * (len(headers) * 30 + 10))
     for row in data:
         print(row_format.format(*row))
 
@@ -45,7 +45,9 @@ def DP_gap(A, Y_hat, debug=False):
     PosRate1 = np.mean((Y_hat_A1== 1) * 1)
 
     if (debug):
-        print("Pos Rate A0: {} || Pos Rate A1: {}".format(PosRate0, PosRate1))
+        print("Demographic Parity")
+        print("{:>5} Positive Rate (A=0): {:>20.2f}".format("", PosRate0))
+        print("{:>5} Positive Rate (A=1): {:>20.2f}".format("", PosRate1))
 
     return abs(PosRate0 - PosRate1) 
 
@@ -75,8 +77,13 @@ def EO_gap(A, Y_hat, Y, debug=False):
     Eopp_Y1 = abs(PosRate_A0_Y1 - PosRate_A1_Y1)
 
     if (debug):
-        print("Eopp_Y0: {} || PosRate_A0_Y0: {} || PosRate_A1_Y0: {}".format(Eopp_Y0, PosRate_A0_Y0, PosRate_A1_Y0))
-        print("Eopp_Y1: {} || PosRate_A0_Y1: {} || PosRate_A1_Y1: {}".format(Eopp_Y1, PosRate_A0_Y1, PosRate_A1_Y1))
+        print("Equalized Odds")
+        print("{:>5} Equal Opporunity (Y=0)".format(""))
+        print("{:>5} {:>5} Positive Rate (A=0) and (Y=0): {:>20.2f}".format("", "", PosRate_A0_Y0))
+        print("{:>5} {:>5} Positive Rate (A=1) and (Y=0): {:>20.2f}".format("", "", PosRate_A1_Y0))
+        print("{:>5} Equal Opporunity (Y=1)".format(""))
+        print("{:>5} {:>5} Positive Rate (A=0) and (Y=1): {:>20.2f}".format("", "", PosRate_A0_Y1))
+        print("{:>5} {:>5} Positive Rate (A=1) and (Y=1): {:>20.2f}".format("", "", PosRate_A1_Y1))
 
     return Eopp_Y0 + Eopp_Y1
 
@@ -106,8 +113,13 @@ def EOpp_gap(A, Y_hat, Y, debug=False):
     Eopp_Y1 = abs(PosRate_A0_Y1 - PosRate_A1_Y1)
 
     if (debug):
-        print("Eopp_Y0: {} || PosRate_A0_Y0: {} || PosRate_A1_Y0: {}".format(Eopp_Y0, PosRate_A0_Y0, PosRate_A1_Y0))
-        print("Eopp_Y1: {} || PosRate_A0_Y1: {} || PosRate_A1_Y1: {}".format(Eopp_Y1, PosRate_A0_Y1, PosRate_A1_Y1))
+        print("Equal Opportunity")
+        print("{:>5} Equal Opporunity (Y=0)".format(""))
+        print("{:>5} {:>5} Positive Rate (A=0) and (Y=0): {:>20.2f}".format("", "", PosRate_A0_Y0))
+        print("{:>5} {:>5} Positive Rate (A=1) and (Y=0): {:>20.2f}".format("", "", PosRate_A1_Y0))
+        print("{:>5} Equal Opporunity (Y=1)".format(""))
+        print("{:>5} {:>5} Positive Rate (A=0) and (Y=1): {:>20.2f}".format("", "", PosRate_A0_Y1))
+        print("{:>5} {:>5} Positive Rate (A=1) and (Y=1): {:>20.2f}".format("", "", PosRate_A1_Y1))
 
     return Eopp_Y0, Eopp_Y1
 
@@ -129,7 +141,9 @@ def Acc_gap(A, Y_hat, Y, debug=False):
     Acc1 = np.mean((Y_A1 == Y_hat_A1)*1)
     
     if (debug):
-        print("Acc A0: {} || Acc A1: {}".format(Acc0, Acc1))
+        print("Accuracy Parity")
+        print("{:>5} Accuracy (A=0): {:>20.2f}".format("", Acc0))
+        print("{:>5} Accuracy (A=1): {:>20.2f}".format("", Acc1))
 
     return abs(Acc0 - Acc1)
 
@@ -149,6 +163,8 @@ def Base_rate(A, Y, debug=False):
     BaseRate1 = np.mean((Y_A1== 1) * 1)
 
     if (debug):
-        print("Base Rate A0: {} || Base Rate A1: {}".format(BaseRate0, BaseRate1))
+        print("Base Rate")
+        print("{:>5} Base Rate (A=0): {:>20.2f}".format("", BaseRate0))
+        print("{:>5} Base Rate (A=1): {:>20.2f}".format("", BaseRate1))
 
     return abs(BaseRate0 - BaseRate1) 
