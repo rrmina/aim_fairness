@@ -2,8 +2,8 @@
 # Preprocessing is largely based on https://github.com/eth-sri/lcifr/blob/master/code/datasets/compas.py
 # 
 #   Features              :  12 Dimensions ( / {Race, Recid})
-#   Sensitive attribute   :   1 Dimension  (Sex)
-#   Ground Truth Label    :   1 Dimension  (Income)
+#   Sensitive attribute   :   1 Dimension  (Race)
+#   Ground Truth Label    :   1 Dimension  (Recidivism)
 #
 #   Please note that the features does not contain the sensitive attribute. 
 #   This is in contrast to the assumptions of Ruoss et. al https://github.com/eth-sri/lcifr/issues/1
