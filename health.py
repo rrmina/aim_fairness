@@ -1,4 +1,4 @@
-# Compas Dataset
+# Health Dataset
 # Preprocessing is largely based on https://github.com/eth-sri/lcifr/blob/master/code/datasets/health.py
 # which is also based on https://github.com/truongkhanhduy95/Heritage-Health-Prize
 # 

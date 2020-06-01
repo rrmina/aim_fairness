@@ -1,10 +1,16 @@
-# The Extended Yale B dataset is not publicly available
-# Please download and extract before using this dataloader script
+# Extended Yale B dataset
+#   This data loader uses the Cropped version of Extended Yale B dataset
+#   It contains faces under various illumniations of 38 persons
+# 
+#   Dataset Link:   http://vision.ucsd.edu/~leekc/ExtYaleDatabase/ExtYaleB.html
+#                   http://vision.ucsd.edu/extyaleb/CroppedYaleBZip/CroppedYale.zip
+# 
+#   To use:
 #
-# Dataset Link: http://vision.ucsd.edu/~leekc/ExtYaleDatabase/ExtYaleB.html
+#   dataset = PGMDataset(DATASET_PATH, download=True, transform=transform)
+#   dataloader = torch.utils.data.DataLoader(dataset, batch_size=1, shuffle=True)
 # 
-#   Please download the cropped version
-# 
+#   dataloader returns (image (pixel intensity), label (person index))
 
 import os
 import urllib.request as ur
