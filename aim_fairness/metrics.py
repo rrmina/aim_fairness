@@ -16,6 +16,7 @@ def report_group_metrics(A, Y_hat, Y, debug=False):
     eo_gap = EO_gap(A, Y_hat, Y, debug)
     eopp_gap = EOpp_gap(A, Y_hat, Y, debug)
     acc_gap = Acc_gap(A, Y_hat, Y, debug)
+    f1_gap = F1_score_gap(A, Y_hat, Y, debug)
 
     # Pretty Printing    
     row_format = "{:>30}{:>30.4f}"
@@ -26,6 +27,7 @@ def report_group_metrics(A, Y_hat, Y, debug=False):
     data.append(["Equal Opportunity Y0", eopp_gap[0]])
     data.append(["Equal Opportunity Y1", eopp_gap[1]])
     data.append(["Accuracy Parity", acc_gap])
+    data.append(["F1 Scores Gap", f1_gap])
 
     # Print
     headers = ["Fairness Definitions", "Gap Values"]
@@ -186,17 +188,23 @@ def F_beta_score_gap(A, Y_hat, Y, beta=1, debug=False):
     assert Y_hat.shape == A.shape, "Y_hat and A are expected to have the same shape"
     assert len(A.shape) == 1, "A, Y_hat, and Y are expected to be 1D vectors"
 
+    # Divide the subgroups of prediction and labels
     Y_A0 = Y[A==0]
     Y_A1 = Y[A==1]
     Y_hat_A0 = Y_hat[A==0]
     Y_hat_A1 = Y_hat[A==1]
 
-    F_beta_score_A0 = F_beta_score(Y_hat_A0, Y_A0, debug=debug)
-    F_beta_score_A1 = F_beta_score(Y_hat_A1, Y_A1, debug=debug)
-
     if (debug):
         print("F{} Scores".format(beta))
+
+    # Compute F1 Score for A0
+    F_beta_score_A0 = F_beta_score(Y_hat_A0, Y_A0, debug=debug)
+    if (debug):
         print("{:>5} F{} Score (A=0): {:>20.4f}".format("", beta, F_beta_score_A0))
+
+    # Compute F1 Score for A1
+    F_beta_score_A1 = F_beta_score(Y_hat_A1, Y_A1, debug=debug)
+    if (debug):
         print("{:>5} F{} Score (A=1): {:>20.4f}".format("", beta, F_beta_score_A1))
 
     return abs(F_beta_score_A0 - F_beta_score_A1)
@@ -217,6 +225,9 @@ def F_beta_score(Y_hat, Y, beta=1, debug=False):
     constant = (1+ np.power(beta, 2))
     numerator = precision_ * recall_
     denominator = (np.power(beta, 2) * precision_) + recall_
+
+    if (numerator == 0):
+        return 0
 
     return constant * numerator / denominator
 
