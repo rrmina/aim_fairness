@@ -1,6 +1,14 @@
-data/ExtendedYaleB
-datasets/__pycache__
+data/
 .ipynb_checkpoints/
 __pycache__/
 debug_notebooks/.ipynb_checkpoints/
 debug_notebooks/__pycache__/
+
+*.ipynb
+
+aim_fairness/data/ExtendedYaleB
+aim_fairness/datasets/__pycache__
+aim_fairness/.ipynb_checkpoints/
+aim_fairness/__pycache__/
+aim_fairness/debug_notebooks/.ipynb_checkpoints/
+aim_fairness/debug_notebooks/__pycache__/
