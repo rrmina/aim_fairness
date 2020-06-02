@@ -10,15 +10,19 @@ def report_group_metrics(A, Y_hat, Y, debug=False):
     print("=" * 70)
     print("{}{}".format(" " * 26, "Confusion Matrices"))
     print("=" * 70)
-    Confusion_Matrix(Y_hat[A==0], Y[A==0], title='A=0')
+    Confusion_matrix(Y_hat[A==0], Y[A==0], title='A=0')
     print()
-    Confusion_Matrix(Y_hat[A==1], Y[A==1], title='A=1')
+    Confusion_matrix(Y_hat[A==0], Y[A==0], percentage=True, title='A=0')
+    print()
+    Confusion_matrix(Y_hat[A==1], Y[A==1], title='A=1')
+    print()
+    Confusion_matrix(Y_hat[A==1], Y[A==1], percentage=True, title='A=1')
 
+    # Debug Header
     if (debug):
         print("=" * 70)
         print("{}{}".format(" " * 30, "Debug Logs"))
         print("=" * 70)
-
 
     # Compute metrics
     base_rate = Base_rate(A, Y, debug)
@@ -257,12 +261,19 @@ def Precision(Y_hat, Y):
     return np.mean(Y[Y_hat==1])
 
 # Print Confusion Matrix
-def Confusion_matrix(Y_hat, Y, title=''):
+def Confusion_matrix(Y_hat, Y, percentage=False, title=''):
     assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
     tp = TP(Y_hat, Y)
     fp = FP(Y_hat, Y)
     fn = FN(Y_hat, Y)
     tn = TN(Y_hat, Y)
+
+    if (percentage):
+        sum_all = tp + fp + fn + tn
+        tp = tp / sum_all
+        fp = fp / sum_all
+        fn = fn / sum_all
+        tn = tn / sum_all
 
     # String Format
     t = Texttable()
