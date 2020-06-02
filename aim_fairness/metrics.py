@@ -1,14 +1,24 @@
 import numpy as np
+from texttable import Texttable
 
 def report_group_metrics(A, Y_hat, Y, debug=False):
     assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
     assert Y_hat.shape == A.shape, "Y_hat and A are expected to have the same shape"
     assert len(A.shape) == 1, "A, Y_hat, and Y are expected to be 1D vectors"
 
+    # Confusion Matrix
+    print("=" * 70)
+    print("{}{}".format(" " * 26, "Confusion Matrices"))
+    print("=" * 70)
+    Confusion_Matrix(Y_hat[A==0], Y[A==0], title='A=0')
+    print()
+    Confusion_Matrix(Y_hat[A==1], Y[A==1], title='A=1')
+
     if (debug):
         print("=" * 70)
         print("{}{}".format(" " * 30, "Debug Logs"))
         print("=" * 70)
+
 
     # Compute metrics
     base_rate = Base_rate(A, Y, debug)
@@ -215,8 +225,8 @@ def F1_score(Y_hat, Y, debug=False):
 
 def F_beta_score(Y_hat, Y, beta=1, debug=False):
     assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
-    precision_ = precision(Y_hat, Y)
-    recall_ = recall(Y_hat, Y)
+    precision_ = Precision(Y_hat, Y)
+    recall_ = Recall(Y_hat, Y)
 
     if (debug):
         print("{:>5} Precision: {:>20.4f}".format("", precision_))
@@ -232,16 +242,53 @@ def F_beta_score(Y_hat, Y, beta=1, debug=False):
     return constant * numerator / denominator
 
 # Sensitivty, Recall, Hit Rate or True Positive Rate (TPR)
-def recall(Y_hat, Y):
+def Recall(Y_hat, Y):
     assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
     return np.mean(Y_hat[Y==1])
 
 # Specificity, Selectivity, or True Negative Rate (TNR)
-def specificity(Y_hat, Y):
+def Specificity(Y_hat, Y):
     assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
     return 1 - np.mean(Y_hat[Y==0])
 
 # Precision or Positive Prediction Value
-def precision(Y_hat, Y):
+def Precision(Y_hat, Y):
     assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
     return np.mean(Y[Y_hat==1])
+
+# Print Confusion Matrix
+def Confusion_matrix(Y_hat, Y, title=''):
+    assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
+    tp = TP(Y_hat, Y)
+    fp = FP(Y_hat, Y)
+    fn = FN(Y_hat, Y)
+    tn = TN(Y_hat, Y)
+
+    # String Format
+    t = Texttable()
+    t.add_rows([
+        [    title,'Y=1', 'Y=0'],
+        ['Y_hat=1',   tp,    fp],
+        ['Y_hat=0',   fn,    tn]
+    ])
+    print(t.draw())
+
+def TP(Y_hat, Y):
+    assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
+    correct = (Y_hat == Y) * 1
+    return np.sum(correct[Y==1])
+
+def TN(Y_hat, Y):
+    assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
+    correct = (Y_hat == Y) * 1
+    return np.sum(correct[Y==0])
+
+def FP(Y_hat, Y):
+    assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
+    wrong = 1 - (Y_hat == Y) * 1
+    return np.sum(wrong[Y==0])
+
+def FN(Y_hat, Y):
+    assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
+    wrong = 1 - (Y_hat == Y) * 1
+    return np.sum(wrong[Y==1])
