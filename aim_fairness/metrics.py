@@ -20,7 +20,7 @@ def report_group_metrics(A, Y_hat, Y, debug=False):
     # Pretty Printing
     
     
-    row_format = "{:>30}{:>30.2f}"
+    row_format = "{:>30}{:>30.4f}"
     data = []
     data.append(["Base Rate", base_rate])
     data.append(["Demographic Parity", dp_gap])
@@ -53,8 +53,8 @@ def DP_gap(A, Y_hat, debug=False):
 
     if (debug):
         print("Demographic Parity")
-        print("{:>5} Positive Rate (A=0): {:>20.2f}".format("", PosRate0))
-        print("{:>5} Positive Rate (A=1): {:>20.2f}".format("", PosRate1))
+        print("{:>5} Positive Rate (A=0): {:>20.4f}".format("", PosRate0))
+        print("{:>5} Positive Rate (A=1): {:>20.4f}".format("", PosRate1))
 
     return abs(PosRate0 - PosRate1) 
 
@@ -86,11 +86,11 @@ def EO_gap(A, Y_hat, Y, debug=False):
     if (debug):
         print("Equalized Odds")
         print("{:>5} Equal Opporunity (Y=0)".format(""))
-        print("{:>5} {:>5} Positive Rate (A=0) and (Y=0): {:>20.2f}".format("", "", PosRate_A0_Y0))
-        print("{:>5} {:>5} Positive Rate (A=1) and (Y=0): {:>20.2f}".format("", "", PosRate_A1_Y0))
+        print("{:>5} {:>5} Positive Rate (A=0) and (Y=0): {:>20.4f}".format("", "", PosRate_A0_Y0))
+        print("{:>5} {:>5} Positive Rate (A=1) and (Y=0): {:>20.4f}".format("", "", PosRate_A1_Y0))
         print("{:>5} Equal Opporunity (Y=1)".format(""))
-        print("{:>5} {:>5} Positive Rate (A=0) and (Y=1): {:>20.2f}".format("", "", PosRate_A0_Y1))
-        print("{:>5} {:>5} Positive Rate (A=1) and (Y=1): {:>20.2f}".format("", "", PosRate_A1_Y1))
+        print("{:>5} {:>5} Positive Rate (A=0) and (Y=1): {:>20.4f}".format("", "", PosRate_A0_Y1))
+        print("{:>5} {:>5} Positive Rate (A=1) and (Y=1): {:>20.4f}".format("", "", PosRate_A1_Y1))
 
     return Eopp_Y0 + Eopp_Y1
 
@@ -122,11 +122,11 @@ def EOpp_gap(A, Y_hat, Y, debug=False):
     if (debug):
         print("Equal Opportunity")
         print("{:>5} Equal Opporunity (Y=0)".format(""))
-        print("{:>5} {:>5} Positive Rate (A=0) and (Y=0): {:>20.2f}".format("", "", PosRate_A0_Y0))
-        print("{:>5} {:>5} Positive Rate (A=1) and (Y=0): {:>20.2f}".format("", "", PosRate_A1_Y0))
+        print("{:>5} {:>5} Positive Rate (A=0) and (Y=0): {:>20.4f}".format("", "", PosRate_A0_Y0))
+        print("{:>5} {:>5} Positive Rate (A=1) and (Y=0): {:>20.4f}".format("", "", PosRate_A1_Y0))
         print("{:>5} Equal Opporunity (Y=1)".format(""))
-        print("{:>5} {:>5} Positive Rate (A=0) and (Y=1): {:>20.2f}".format("", "", PosRate_A0_Y1))
-        print("{:>5} {:>5} Positive Rate (A=1) and (Y=1): {:>20.2f}".format("", "", PosRate_A1_Y1))
+        print("{:>5} {:>5} Positive Rate (A=0) and (Y=1): {:>20.4f}".format("", "", PosRate_A0_Y1))
+        print("{:>5} {:>5} Positive Rate (A=1) and (Y=1): {:>20.4f}".format("", "", PosRate_A1_Y1))
 
     return Eopp_Y0, Eopp_Y1
 
@@ -149,8 +149,8 @@ def Acc_gap(A, Y_hat, Y, debug=False):
     
     if (debug):
         print("Accuracy Parity")
-        print("{:>5} Accuracy (A=0): {:>20.2f}".format("", Acc0))
-        print("{:>5} Accuracy (A=1): {:>20.2f}".format("", Acc1))
+        print("{:>5} Accuracy (A=0): {:>20.4f}".format("", Acc0))
+        print("{:>5} Accuracy (A=1): {:>20.4f}".format("", Acc1))
 
     return abs(Acc0 - Acc1)
 
@@ -171,7 +171,7 @@ def Base_rate(A, Y, debug=False):
 
     if (debug):
         print("Base Rate")
-        print("{:>5} Base Rate (A=0): {:>20.2f}".format("", BaseRate0))
-        print("{:>5} Base Rate (A=1): {:>20.2f}".format("", BaseRate1))
+        print("{:>5} Base Rate (A=0): {:>20.4f}".format("", BaseRate0))
+        print("{:>5} Base Rate (A=1): {:>20.4f}".format("", BaseRate1))
 
     return abs(BaseRate0 - BaseRate1) 
