@@ -17,9 +17,7 @@ def report_group_metrics(A, Y_hat, Y, debug=False):
     eopp_gap = EOpp_gap(A, Y_hat, Y, debug)
     acc_gap = Acc_gap(A, Y_hat, Y, debug)
 
-    # Pretty Printing
-    
-    
+    # Pretty Printing    
     row_format = "{:>30}{:>30.4f}"
     data = []
     data.append(["Base Rate", base_rate])
@@ -175,3 +173,64 @@ def Base_rate(A, Y, debug=False):
         print("{:>5} Base Rate (A=1): {:>20.4f}".format("", BaseRate1))
 
     return abs(BaseRate0 - BaseRate1) 
+
+def F1_score_gap(A, Y_hat, Y, debug=False):
+    assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
+    assert Y_hat.shape == A.shape, "Y_hat and A are expected to have the same shape"
+    assert len(A.shape) == 1, "A, Y_hat, and Y are expected to be 1D vectors"
+
+    return F_beta_score_gap(A, Y_hat, Y, beta=1, debug=debug)
+
+def F_beta_score_gap(A, Y_hat, Y, beta=1, debug=False):
+    assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
+    assert Y_hat.shape == A.shape, "Y_hat and A are expected to have the same shape"
+    assert len(A.shape) == 1, "A, Y_hat, and Y are expected to be 1D vectors"
+
+    Y_A0 = Y[A==0]
+    Y_A1 = Y[A==1]
+    Y_hat_A0 = Y_hat[A==0]
+    Y_hat_A1 = Y_hat[A==1]
+
+    F_beta_score_A0 = F_beta_score(Y_hat_A0, Y_A0, debug=debug)
+    F_beta_score_A1 = F_beta_score(Y_hat_A1, Y_A1, debug=debug)
+
+    if (debug):
+        print("F{} Scores".format(beta))
+        print("{:>5} F{} Score (A=0): {:>20.4f}".format("", beta, F_beta_score_A0))
+        print("{:>5} F{} Score (A=1): {:>20.4f}".format("", beta, F_beta_score_A1))
+
+    return abs(F_beta_score_A0 - F_beta_score_A1)
+
+def F1_score(Y_hat, Y, debug=False):
+    assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
+    return F_beta_score(Y_hat, Y, beta=1, debug=debug)
+
+def F_beta_score(Y_hat, Y, beta=1, debug=False):
+    assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
+    precision_ = precision(Y_hat, Y)
+    recall_ = recall(Y_hat, Y)
+
+    if (debug):
+        print("{:>5} Precision: {:>20.4f}".format("", precision_))
+        print("{:>5} Recall: {:>20.4f}".format("", recall_))
+
+    constant = (1+ np.power(beta, 2))
+    numerator = precision_ * recall_
+    denominator = (np.power(beta, 2) * precision_) + recall_
+
+    return constant * numerator / denominator
+
+# Sensitivty, Recall, Hit Rate or True Positive Rate (TPR)
+def recall(Y_hat, Y):
+    assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
+    return np.mean(Y_hat[Y==1])
+
+# Specificity, Selectivity, or True Negative Rate (TNR)
+def specificity(Y_hat, Y):
+    assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
+    return 1 - np.mean(Y_hat[Y==0])
+
+# Precision or Positive Prediction Value
+def precision(Y_hat, Y):
+    assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
+    return np.mean(Y[Y_hat==1])
