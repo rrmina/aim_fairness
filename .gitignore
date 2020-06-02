@@ -1,2 +1,6 @@
 data/ExtendedYaleB
 datasets/__pycache__
+.ipynb_checkpoints/
+__pycache__/
+debug_notebooks/.ipynb_checkpoints/
+debug_notebooks/__pycache__/
