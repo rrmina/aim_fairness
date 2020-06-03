@@ -1,2 +1,2 @@
-from . import metrics
-from . import *
+from aim_fairness import metrics
+from aim_fairness.TabularFairnessDataset import TabularFairnessDataset
