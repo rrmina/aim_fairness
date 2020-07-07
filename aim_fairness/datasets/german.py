@@ -104,7 +104,7 @@ def _read_data_file(path, device, normalize=True):
     # Convert data to torch tensor
     x = torch.tensor( features.values.astype(np.float32), device=device )
     y = 2 - torch.tensor( labels.values.astype(np.int64), device=device )   # We need to subtract from 2 because the resulting tensor have values {1,2}
-    a = torch.tensor( a.astype(np.bool), device=device )
+    a = torch.tensor( a.astype(np.bool), device=device ) * 1
 
     # Normalize the values of the continuous variables
     if (normalize):

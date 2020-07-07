@@ -132,7 +132,7 @@ def _read_data_file(zip_path, device, transfer, normalize=True):
     # Convert data to torch tensor
     x = torch.tensor( features.values.astype(np.float32), device=device)
     y = torch.tensor( labels.values.astype(np.int64), device=device )
-    a = torch.tensor( a.values.astype(np.bool), device=device)
+    a = torch.tensor( a.values.astype(np.bool), device=device) * 1
 
     # Normalize the values of continous columns
     if (normalize):

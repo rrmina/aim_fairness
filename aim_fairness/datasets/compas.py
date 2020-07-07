@@ -119,7 +119,7 @@ def _read_data_file(path, device, normalize=True):
     # Convert data to torch tensors
     x = torch.tensor( features.values.astype(np.float32), device=device )
     y = torch.tensor( labels.values.astype(np.int64), device=device)
-    a = torch.tensor( a.astype(np.bool), device=device )
+    a = torch.tensor( a.astype(np.bool), device=device ) * 1
 
     if (normalize):
         columns = continuous_columns if continuous_columns is not None else np.arange(x.shape[1])
