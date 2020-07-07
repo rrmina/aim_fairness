@@ -2,9 +2,9 @@ import numpy as np
 from texttable import Texttable
 
 def report_group_metrics(A, Y_hat, Y, debug=False):
-    assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
-    assert Y_hat.shape == A.shape, "Y_hat and A are expected to have the same shape"
-    assert len(A.shape) == 1, "A, Y_hat, and Y are expected to be 1D vectors"
+    assert Y_hat.shape == Y.shape, "Y_hat {} and Y {} are expected to have the same shape".format(Y_hat.shape, Y.shape)
+    assert Y_hat.shape == A.shape, "Y_hat {} and A {} are expected to have the same shape".format(Y_hat.shape, A.shape)
+    assert len(A.shape) == 1, "A {}, Y_hat {}, and Y {} are expected to be 1D vectors".format(A.shape, Y_hat.shape, Y.shape)
 
     # Divide subgroups of labels and predictions
     Y_A0 = Y[A==0]              # Labels of Group 0
@@ -58,28 +58,28 @@ def report_group_metrics(A, Y_hat, Y, debug=False):
         print(row_format.format(*row))
 
 def TP(Y_hat, Y):
-    assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
+    assert Y_hat.shape == Y.shape, "Y_hat {} and Y {} are expected to have the same shape".format(Y_hat.shape, Y.shape)
     correct = (Y_hat == Y) * 1
     return np.sum(correct[Y==1])
 
 def TN(Y_hat, Y):
-    assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
+    assert Y_hat.shape == Y.shape, "Y_hat {} and Y {} are expected to have the same shape".format(Y_hat.shape, Y.shape)
     correct = (Y_hat == Y) * 1
     return np.sum(correct[Y==0])
 
 def FP(Y_hat, Y):
-    assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
+    assert Y_hat.shape == Y.shape, "Y_hat {} and Y {} are expected to have the same shape".format(Y_hat.shape, Y.shape)
     wrong = 1 - (Y_hat == Y) * 1
     return np.sum(wrong[Y==0])
 
 def FN(Y_hat, Y):
-    assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
+    assert Y_hat.shape == Y.shape, "Y_hat {} and Y {} are expected to have the same shape".format(Y_hat.shape, Y.shape)
     wrong = 1 - (Y_hat == Y) * 1
     return np.sum(wrong[Y==1])
 
 # Print Confusion Matrix
 def Confusion_matrix(Y_hat, Y, percentage=False, title=''):
-    assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
+    assert Y_hat.shape == Y.shape, "Y_hat {} and Y {} are expected to have the same shape".format(Y_hat.shape, Y.shape)
     tp, fp, fn, tn = TP(Y_hat, Y), FP(Y_hat, Y), FN(Y_hat, Y), TN(Y_hat, Y)
 
     if (percentage):
@@ -97,33 +97,33 @@ def Confusion_matrix(Y_hat, Y, percentage=False, title=''):
 
 # Sensitivty, Recall, Hit Rate or True Positive Rate (TPR)
 def Recall(Y_hat, Y):
-    assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
+    assert Y_hat.shape == Y.shape, "Y_hat {} and Y {} are expected to have the same shape".format(Y_hat.shape, Y.shape)
     return np.mean(Y_hat[Y==1])
 
 # Specificity, Selectivity, or True Negative Rate (TNR)
 def Specificity(Y_hat, Y):
-    assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
+    assert Y_hat.shape == Y.shape, "Y_hat {} and Y {} are expected to have the same shape".format(Y_hat.shape, Y.shape)
     return 1 - np.mean(Y_hat[Y==0])
 
 # Precision or Positive Prediction Value
 def Precision(Y_hat, Y):
-    assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
+    assert Y_hat.shape == Y.shape, "Y_hat {} and Y {} are expected to have the same shape".format(Y_hat.shape, Y.shape)
     return np.mean(Y[Y_hat==1])
 
 ####################################################################################
 #                                   Gap Scores
 ####################################################################################
 def F1Score_gap(A, Y_hat, Y, debug=False):
-    assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
-    assert Y_hat.shape == A.shape, "Y_hat and A are expected to have the same shape"
-    assert len(A.shape) == 1, "A, Y_hat, and Y are expected to be 1D vectors"
+    assert Y_hat.shape == Y.shape, "Y_hat {} and Y {} are expected to have the same shape".format(Y_hat.shape, Y.shape)
+    assert Y_hat.shape == A.shape, "Y_hat {} and A {} are expected to have the same shape".format(Y_hat.shape, A.shape)
+    assert len(A.shape) == 1, "A {}, Y_hat {}, and Y {} are expected to be 1D vectors".format(A.shape, Y_hat.shape, Y.shape)
 
     return FBetaScore_gap(A, Y_hat, Y, beta=1, debug=debug)
 
 def FBetaScore_gap(A, Y_hat, Y, beta=1, debug=False):
-    assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
-    assert Y_hat.shape == A.shape, "Y_hat and A are expected to have the same shape"
-    assert len(A.shape) == 1, "A, Y_hat, and Y are expected to be 1D vectors"
+    assert Y_hat.shape == Y.shape, "Y_hat {} and Y {} are expected to have the same shape".format(Y_hat.shape, Y.shape)
+    assert Y_hat.shape == A.shape, "Y_hat {} and A {} are expected to have the same shape".format(Y_hat.shape, A.shape)
+    assert len(A.shape) == 1, "A {}, Y_hat {}, and Y {} are expected to be 1D vectors".format(A.shape, Y_hat.shape, Y.shape)
 
     # Divide subgroups of labels
     Y_A0 = Y[A==0]              # Labels of Group 0
@@ -147,11 +147,11 @@ def FBetaScore_gap(A, Y_hat, Y, beta=1, debug=False):
     return abs(F_beta_score_A0 - F_beta_score_A1)
 
 def F1_score(Y_hat, Y, debug=False):
-    assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
+    assert Y_hat.shape == Y.shape, "Y_hat {} and Y {} are expected to have the same shape".format(Y_hat.shape, Y.shape)
     return FBeta_score(Y_hat, Y, beta=1, debug=debug)
 
 def FBeta_score(Y_hat, Y, beta=1, debug=False):
-    assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
+    assert Y_hat.shape == Y.shape, "Y_hat {} and Y {} are expected to have the same shape".format(Y_hat.shape, Y.shape)
     precision_ = Precision(Y_hat, Y)
     recall_ = Recall(Y_hat, Y)
 
@@ -170,8 +170,8 @@ def FBeta_score(Y_hat, Y, beta=1, debug=False):
 
 # DP_gap and BaseRate_gap are essentially the same, except for their inputs
 def BaseRate_gap(A, Y, debug=False):
-    assert Y.shape == A.shape, "Y and A are expected to have the same shape"
-    assert len(A.shape) == 1, "A and Y are expected to be 1D vectors"
+    assert Y.shape == A.shape, "Y {} and A {} are expected to have the same shape".format(Y.shape, A.shape)
+    assert len(A.shape) == 1, "Y {} and A {} are expected to be 1D vectors".format(Y.shape, A.shape)
 
     # Divide subgroups of labels
     Y_A0 = Y[A==0]              # Labels of Group 0
@@ -190,8 +190,8 @@ def BaseRate_gap(A, Y, debug=False):
 
 # DP_gap and BaseRate_gap are essentially the same, except for their inputs
 def DemographicParity_gap(A, Y_hat, debug=False):
-    assert Y_hat.shape == A.shape, "Y_hat and A are expected to have the same shape"
-    assert len(A.shape) == 1, "A and Y are expected to be 1D vectors"
+    assert Y_hat.shape == A.shape, "Y_hat {} and A {} are expected to have the same shape".format(Y_hat.shape, A.shape)
+    assert len(A.shape) == 1, "Y_hat {} and A {} are expected to be 1D vectors".format(Y_hat.shape, A.shape)
 
     # Divide subgroups of labels
     Y_hat_A0 = Y_hat[A==0]      # Predictions of Group 0
@@ -210,9 +210,9 @@ def DemographicParity_gap(A, Y_hat, debug=False):
 
 # Accuracy Gap
 def Accuracy_gap(A, Y_hat, Y, debug=False):
-    assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
-    assert Y_hat.shape == A.shape, "Y_hat and A are expected to have the same shape"
-    assert len(A.shape) == 1, "A, Y_hat, and Y are expected to be 1D vectors"
+    assert Y_hat.shape == Y.shape, "Y_hat {} and Y {} are expected to have the same shape".format(Y_hat.shape, Y.shape)
+    assert Y_hat.shape == A.shape, "Y_hat {} and A {} are expected to have the same shape".format(Y_hat.shape, A.shape)
+    assert len(A.shape) == 1, "A {}, Y_hat {}, and Y {} are expected to be 1D vectors".format(A.shape, Y_hat.shape, Y.shape)
 
     # Divide subgroups of labels and predictions
     Y_A0 = Y[A==0]              # Labels of Group 0
@@ -233,9 +233,9 @@ def Accuracy_gap(A, Y_hat, Y, debug=False):
 
 # Equalized Odds Gap
 def EqualizedOdds_gap(A, Y_hat, Y, debug=False):
-    assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
-    assert Y_hat.shape == A.shape, "Y_hat and A are expected to have the same shape"
-    assert len(A.shape) == 1, "A, Y_hat, and Y are expected to be 1D vectors"
+    assert Y_hat.shape == Y.shape, "Y_hat {} and Y {} are expected to have the same shape".format(Y_hat.shape, Y.shape)
+    assert Y_hat.shape == A.shape, "Y_hat {} and A {} are expected to have the same shape".format(Y_hat.shape, A.shape)
+    assert len(A.shape) == 1, "A {}, Y_hat {}, and Y {} are expected to be 1D vectors".format(A.shape, Y_hat.shape, Y.shape)
 
     # Divide subgroups of labels and predictions
     Y_A0 = Y[A==0]              # Labels of Group 0
@@ -265,9 +265,9 @@ def EqualizedOdds_gap(A, Y_hat, Y, debug=False):
 
 # Equal Opportunity Gap
 def EqualOpportunity_gap(A, Y_hat, Y, debug=False):
-    assert Y_hat.shape == Y.shape, "Y_hat and Y are expected to have the same shape"
-    assert Y_hat.shape == A.shape, "Y_hat and A are expected to have the same shape"
-    assert len(A.shape) == 1, "A, Y_hat, and Y are expected to be 1D vectors"
+    assert Y_hat.shape == Y.shape, "Y_hat {} and Y {} are expected to have the same shape".format(Y_hat.shape, Y.shape)
+    assert Y_hat.shape == A.shape, "Y_hat {} and A {} are expected to have the same shape".format(Y_hat.shape, A.shape)
+    assert len(A.shape) == 1, "A {}, Y_hat {}, and Y {} are expected to be 1D vectors".format(A.shape, Y_hat.shape, Y.shape)
 
     # Divide subgroups of labels and predictions
     Y_A0 = Y[A==0]              # Labels of Group 0
