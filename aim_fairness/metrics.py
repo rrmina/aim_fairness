@@ -4,7 +4,7 @@ from texttable import Texttable
 def report_group_metrics(A, Y_hat, Y, debug=False):
     assert Y_hat.shape == Y.shape, "Y_hat {} and Y {} are expected to have the same shape".format(Y_hat.shape, Y.shape)
     assert Y_hat.shape == A.shape, "Y_hat {} and A {} are expected to have the same shape".format(Y_hat.shape, A.shape)
-    assert len(A.shape) == 1, "A {}, Y_hat {}, and Y {} are expected to be 1D vectors".format(A.shape, Y_hat.shape, Y.shape)
+    assert len(A.shape) == 1, "A {}, Y_hat {}, and Y {} are expected to be 1D vectors. You might need to use torch.squeeze()".format(A.shape, Y_hat.shape, Y.shape)
 
     # Divide subgroups of labels and predictions
     Y_A0 = Y[A==0]              # Labels of Group 0
@@ -116,14 +116,14 @@ def Precision(Y_hat, Y):
 def F1Score_gap(A, Y_hat, Y, debug=False):
     assert Y_hat.shape == Y.shape, "Y_hat {} and Y {} are expected to have the same shape".format(Y_hat.shape, Y.shape)
     assert Y_hat.shape == A.shape, "Y_hat {} and A {} are expected to have the same shape".format(Y_hat.shape, A.shape)
-    assert len(A.shape) == 1, "A {}, Y_hat {}, and Y {} are expected to be 1D vectors".format(A.shape, Y_hat.shape, Y.shape)
+    assert len(A.shape) == 1, "A {}, Y_hat {}, and Y {} are expected to be 1D vectors. You might need to use torch.squeeze()".format(A.shape, Y_hat.shape, Y.shape)
 
     return FBetaScore_gap(A, Y_hat, Y, beta=1, debug=debug)
 
 def FBetaScore_gap(A, Y_hat, Y, beta=1, debug=False):
     assert Y_hat.shape == Y.shape, "Y_hat {} and Y {} are expected to have the same shape".format(Y_hat.shape, Y.shape)
     assert Y_hat.shape == A.shape, "Y_hat {} and A {} are expected to have the same shape".format(Y_hat.shape, A.shape)
-    assert len(A.shape) == 1, "A {}, Y_hat {}, and Y {} are expected to be 1D vectors".format(A.shape, Y_hat.shape, Y.shape)
+    assert len(A.shape) == 1, "A {}, Y_hat {}, and Y {} are expected to be 1D vectors. You might need to use torch.squeeze()".format(A.shape, Y_hat.shape, Y.shape)
 
     # Divide subgroups of labels
     Y_A0 = Y[A==0]              # Labels of Group 0
@@ -171,7 +171,7 @@ def FBeta_score(Y_hat, Y, beta=1, debug=False):
 # DP_gap and BaseRate_gap are essentially the same, except for their inputs
 def BaseRate_gap(A, Y, debug=False):
     assert Y.shape == A.shape, "Y {} and A {} are expected to have the same shape".format(Y.shape, A.shape)
-    assert len(A.shape) == 1, "Y {} and A {} are expected to be 1D vectors".format(Y.shape, A.shape)
+    assert len(A.shape) == 1, "Y {} and A {} are expected to be 1D vectors. You might need to use torch.squeeze()".format(Y.shape, A.shape)
 
     # Divide subgroups of labels
     Y_A0 = Y[A==0]              # Labels of Group 0
@@ -191,7 +191,7 @@ def BaseRate_gap(A, Y, debug=False):
 # DP_gap and BaseRate_gap are essentially the same, except for their inputs
 def DemographicParity_gap(A, Y_hat, debug=False):
     assert Y_hat.shape == A.shape, "Y_hat {} and A {} are expected to have the same shape".format(Y_hat.shape, A.shape)
-    assert len(A.shape) == 1, "Y_hat {} and A {} are expected to be 1D vectors".format(Y_hat.shape, A.shape)
+    assert len(A.shape) == 1, "Y_hat {} and A {} are expected to be 1D vectors. You might need to use torch.squeeze()".format(Y_hat.shape, A.shape)
 
     # Divide subgroups of labels
     Y_hat_A0 = Y_hat[A==0]      # Predictions of Group 0
@@ -212,7 +212,7 @@ def DemographicParity_gap(A, Y_hat, debug=False):
 def Accuracy_gap(A, Y_hat, Y, debug=False):
     assert Y_hat.shape == Y.shape, "Y_hat {} and Y {} are expected to have the same shape".format(Y_hat.shape, Y.shape)
     assert Y_hat.shape == A.shape, "Y_hat {} and A {} are expected to have the same shape".format(Y_hat.shape, A.shape)
-    assert len(A.shape) == 1, "A {}, Y_hat {}, and Y {} are expected to be 1D vectors".format(A.shape, Y_hat.shape, Y.shape)
+    assert len(A.shape) == 1, "A {}, Y_hat {}, and Y {} are expected to be 1D vectors. You might need to use torch.squeeze()".format(A.shape, Y_hat.shape, Y.shape)
 
     # Divide subgroups of labels and predictions
     Y_A0 = Y[A==0]              # Labels of Group 0
@@ -235,7 +235,7 @@ def Accuracy_gap(A, Y_hat, Y, debug=False):
 def EqualizedOdds_gap(A, Y_hat, Y, debug=False):
     assert Y_hat.shape == Y.shape, "Y_hat {} and Y {} are expected to have the same shape".format(Y_hat.shape, Y.shape)
     assert Y_hat.shape == A.shape, "Y_hat {} and A {} are expected to have the same shape".format(Y_hat.shape, A.shape)
-    assert len(A.shape) == 1, "A {}, Y_hat {}, and Y {} are expected to be 1D vectors".format(A.shape, Y_hat.shape, Y.shape)
+    assert len(A.shape) == 1, "A {}, Y_hat {}, and Y {} are expected to be 1D vectors. You might need to use torch.squeeze()".format(A.shape, Y_hat.shape, Y.shape)
 
     # Divide subgroups of labels and predictions
     Y_A0 = Y[A==0]              # Labels of Group 0
@@ -267,7 +267,7 @@ def EqualizedOdds_gap(A, Y_hat, Y, debug=False):
 def EqualOpportunity_gap(A, Y_hat, Y, debug=False):
     assert Y_hat.shape == Y.shape, "Y_hat {} and Y {} are expected to have the same shape".format(Y_hat.shape, Y.shape)
     assert Y_hat.shape == A.shape, "Y_hat {} and A {} are expected to have the same shape".format(Y_hat.shape, A.shape)
-    assert len(A.shape) == 1, "A {}, Y_hat {}, and Y {} are expected to be 1D vectors".format(A.shape, Y_hat.shape, Y.shape)
+    assert len(A.shape) == 1, "A {}, Y_hat {}, and Y {} are expected to be 1D vectors. You might need to use torch.squeeze()".format(A.shape, Y_hat.shape, Y.shape)
 
     # Divide subgroups of labels and predictions
     Y_A0 = Y[A==0]              # Labels of Group 0
