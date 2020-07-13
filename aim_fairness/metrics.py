@@ -1,6 +1,9 @@
 import numpy as np
 from texttable import Texttable
 
+####################################################################################
+#                               Fairness Summary
+####################################################################################
 def report_group_metrics(A, Y_hat, Y, debug=False):
     assert Y_hat.shape == Y.shape, "Y_hat {} and Y {} are expected to have the same shape".format(Y_hat.shape, Y.shape)
     assert Y_hat.shape == A.shape, "Y_hat {} and A {} are expected to have the same shape".format(Y_hat.shape, A.shape)
@@ -57,6 +60,9 @@ def report_group_metrics(A, Y_hat, Y, debug=False):
     for row in data:
         print(row_format.format(*row))
 
+####################################################################################
+#                                Confusion Matrix
+####################################################################################
 def TP(Y_hat, Y):
     assert Y_hat.shape == Y.shape, "Y_hat {} and Y {} are expected to have the same shape".format(Y_hat.shape, Y.shape)
     correct = (Y_hat == Y) * 1
@@ -98,17 +104,17 @@ def Confusion_matrix(Y_hat, Y, percentage=False, title=''):
 # Sensitivty, Recall, Hit Rate or True Positive Rate (TPR)
 def Recall(Y_hat, Y):
     assert Y_hat.shape == Y.shape, "Y_hat {} and Y {} are expected to have the same shape".format(Y_hat.shape, Y.shape)
-    return np.mean(Y_hat[Y==1])
+    return mean(Y_hat[Y==1])
 
 # Specificity, Selectivity, or True Negative Rate (TNR)
 def Specificity(Y_hat, Y):
     assert Y_hat.shape == Y.shape, "Y_hat {} and Y {} are expected to have the same shape".format(Y_hat.shape, Y.shape)
-    return 1 - np.mean(Y_hat[Y==0])
+    return 1 - mean(Y_hat[Y==0])
 
 # Precision or Positive Prediction Value
 def Precision(Y_hat, Y):
     assert Y_hat.shape == Y.shape, "Y_hat {} and Y {} are expected to have the same shape".format(Y_hat.shape, Y.shape)
-    return np.mean(Y[Y_hat==1])
+    return mean(Y[Y_hat==1])
 
 ####################################################################################
 #                                   Gap Scores
@@ -178,8 +184,8 @@ def BaseRate_gap(A, Y, debug=False):
     Y_A1 = Y[A==1]              # Labels of Group 1
 
     # Get the positive rates/Base Rates
-    BaseRate0 = np.mean((Y_A0 == 1) * 1)
-    BaseRate1 = np.mean((Y_A1== 1) * 1)
+    BaseRate0 = mean((Y_A0 == 1) * 1)
+    BaseRate1 = mean((Y_A1== 1) * 1)
 
     if (debug):
         print("Base Rate")
@@ -198,8 +204,8 @@ def DemographicParity_gap(A, Y_hat, debug=False):
     Y_hat_A1 = Y_hat[A==1]      # Predictions of Group 1
 
     # Get the positive rates
-    PosRate0 = np.mean((Y_hat_A0 == 1) * 1)
-    PosRate1 = np.mean((Y_hat_A1== 1) * 1)
+    PosRate0 = mean((Y_hat_A0 == 1) * 1)
+    PosRate1 = mean((Y_hat_A1== 1) * 1)
 
     if (debug):
         print("Demographic Parity")
@@ -221,8 +227,8 @@ def Accuracy_gap(A, Y_hat, Y, debug=False):
     Y_hat_A1 = Y_hat[A==1]      # Predictions of Group 1
 
     # Get the accuracies for both groups
-    Acc0 = np.mean((Y_A0 == Y_hat_A0)*1)
-    Acc1 = np.mean((Y_A1 == Y_hat_A1)*1)
+    Acc0 = mean((Y_A0 == Y_hat_A0)*1)
+    Acc1 = mean((Y_A1 == Y_hat_A1)*1)
     
     if (debug):
         print("Accuracy Parity")
@@ -295,3 +301,14 @@ def EqualOpportunity_gap(A, Y_hat, Y, debug=False):
         print("{:>5} {:>5} False Postive Rate (A=1): {:>20.4f}".format("", "", FPR_A0))
 
     return Eopp_Y0, Eopp_Y1
+
+
+####################################################################################
+#                                Sanity Checks
+####################################################################################
+# Returns 0 if numpy array is empty
+def mean(numpy_array):
+    if (numpy_array.size == 0):
+        return 0.0
+    else:
+        return np.mean(numpy_array)
