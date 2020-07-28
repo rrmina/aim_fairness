@@ -1,11 +1,11 @@
 import torch
 
-# TabularFairnessDataset
+# XYADataset
 # This is torch.utils.data.Dataset for common fairness datasets 
 # which is composed of (X,y,a) -> (Features, Labels, Sensitive Attribute)
-class TabularFairnessDataset(torch.utils.data.Dataset):
+class XYADataset(torch.utils.data.Dataset):
     def __init__(self, x, y, a):
-        super(TabularFairnessDataset, self).__init__()
+        super(XYADataset, self).__init__()
         assert x.shape[0] == y.shape[0], "Features and Labels are expected to have same number of instances"
         assert y.shape[0] == a.shape[0], "Labels and Sensitive Attributes are expected to have same number of instances"
         self.x = x
