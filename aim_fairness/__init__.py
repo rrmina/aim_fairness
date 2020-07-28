@@ -1,2 +1,4 @@
 from aim_fairness import metrics
 from aim_fairness.TabularFairnessDataset import TabularFairnessDataset
+from aim_fairness.XYADataset import XYADataset
+from aim_fairness.XYDataset import XYDataset
