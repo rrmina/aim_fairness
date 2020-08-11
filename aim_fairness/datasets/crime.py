@@ -1,9 +1,9 @@
 # Crime Dataset
 # Preprocessing is largely based on https://github.com/eth-sri/lcifr/blob/master/code/datasets/crime.py
 # 
-#   Features                :   57  Dimension ( / {credit, sex})
-#   Sensitive Attribute     :    1  Dimension (sex)
-#   Ground Truth Label      :    1  Dimension (credit)
+#   Features                :  147  Dimension ( / {Crime, Race})
+#   Sensitive Attribute     :    1  Dimension (ViolentCrimePerPopulation)
+#   Ground Truth Label      :    1  Dimension (Race - White and (Black + Asian + Hispanic))
 #
 #   Please note that the features does not contain the sensitive attribute. 
 #   This is in contrast to the assumptions of Ruoss et. al https://github.com/eth-sri/lcifr/issues/1
