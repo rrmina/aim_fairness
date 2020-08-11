@@ -3,3 +3,4 @@ from aim_fairness.datasets import compas
 from aim_fairness.datasets import extYaleB
 from aim_fairness.datasets import german
 from aim_fairness.datasets import health
+from aim_fairness.datasets import crime
