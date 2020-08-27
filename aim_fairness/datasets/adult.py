@@ -54,8 +54,8 @@ def _download_one( filename ):
         print( "Downloading ", filename, " ..." )
         file_download = ur.URLopener()
         file_download.retrieve( adult_url + filename, filepath )
-    else: 
-        print( "Found and verified ", filepath )
+    # else: 
+    #     print( "Found and verified ", filepath )
 
 def _adult_download():
     for key in adult_filenames:
